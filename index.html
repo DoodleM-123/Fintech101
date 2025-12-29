@@ -1,0 +1,993 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fintech 101 Indonesia</title>
+    <!-- Tailwind CSS untuk Styling Cepat & Modern -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome untuk Ikon -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        /* Apple-style Customization */
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: #F5F5F7; /* Apple light gray background */
+            color: #1D1D1F;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+        }
+
+        .card-hover {
+            transition: transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1), box-shadow 0.3s ease;
+        }
+
+        .card-hover:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn-apple {
+            background: #0071e3;
+            color: white;
+            transition: all 0.2s ease;
+        }
+
+        .btn-apple:hover {
+            background: #0077ED;
+            transform: scale(1.02);
+        }
+
+        .btn-apple:active {
+            transform: scale(0.98);
+        }
+
+        /* Progress Bar Animation */
+        .progress-fill {
+            transition: width 1s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* Confetti Effect for Level Up */
+        @keyframes confetti-fall {
+            0% { transform: translateY(-100vh) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
+        }
+        
+        .confetti {
+            position: fixed;
+            width: 10px;
+            height: 10px;
+            background-color: #f00;
+            z-index: 9999;
+            pointer-events: none;
+        }
+
+        .hidden-section {
+            display: none;
+            opacity: 0;
+            transition: opacity 0.3s ease-in-out;
+        }
+
+        .visible-section {
+            display: block;
+            opacity: 1;
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .placeholder-image {
+            background-image: repeating-linear-gradient(45deg, #e5e7eb 25%, transparent 25%, transparent 75%, #e5e7eb 75%, #e5e7eb), repeating-linear-gradient(45deg, #e5e7eb 25%, #f3f4f6 25%, #f3f4f6 75%, #e5e7eb 75%, #e5e7eb);
+            background-position: 0 0, 10px 10px;
+            background-size: 20px 20px;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col md:flex-row">
+
+    <!-- Sidebar Navigation (Desktop) / Bottom Nav (Mobile) -->
+    <nav class="glass-panel w-full md:w-64 md:h-screen fixed md:sticky bottom-0 md:top-0 z-50 flex md:flex-col justify-between p-4 md:p-6 border-t md:border-r border-gray-200">
+        <!-- Logo Area -->
+        <div class="hidden md:flex flex-col items-center mb-8">
+            <div class="w-12 h-12 bg-black text-white rounded-xl flex items-center justify-center text-2xl font-bold mb-3 shadow-lg">
+                F101
+            </div>
+            <h1 class="text-lg font-bold text-center leading-tight">Fintech 101<br><span class="text-blue-600">Indonesia</span></h1>
+        </div>
+
+        <!-- Menu Items -->
+        <div class="flex md:flex-col justify-around w-full space-x-2 md:space-x-0 md:space-y-2">
+            <button onclick="navigate('dashboard')" class="nav-btn flex flex-col md:flex-row items-center md:space-x-3 p-2 md:p-3 rounded-xl hover:bg-gray-100 text-gray-500 hover:text-blue-600 transition-colors active-nav text-blue-600 bg-blue-50">
+                <i class="fas fa-home text-xl md:text-lg"></i>
+                <span class="text-xs md:text-sm font-medium mt-1 md:mt-0">Beranda</span>
+            </button>
+            <button onclick="navigate('modules')" class="nav-btn flex flex-col md:flex-row items-center md:space-x-3 p-2 md:p-3 rounded-xl hover:bg-gray-100 text-gray-500 hover:text-blue-600 transition-colors">
+                <i class="fas fa-book-open text-xl md:text-lg"></i>
+                <span class="text-xs md:text-sm font-medium mt-1 md:mt-0">Belajar</span>
+            </button>
+            <button onclick="navigate('tools')" class="nav-btn flex flex-col md:flex-row items-center md:space-x-3 p-2 md:p-3 rounded-xl hover:bg-gray-100 text-gray-500 hover:text-blue-600 transition-colors">
+                <i class="fas fa-chart-pie text-xl md:text-lg"></i>
+                <span class="text-xs md:text-sm font-medium mt-1 md:mt-0">Alat</span>
+            </button>
+        </div>
+
+        <!-- User Stats (Bottom of Sidebar) -->
+        <div class="hidden md:block mt-auto bg-white p-4 rounded-2xl shadow-sm border border-gray-100">
+            <div class="flex items-center space-x-3 mb-3">
+                <div class="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center text-blue-600">
+                    <i class="fas fa-user"></i>
+                </div>
+                <div>
+                    <p class="text-xs text-gray-500">Level <span id="user-level-display">1</span></p>
+                    <p class="font-bold text-sm">Pelajar Pemula</p>
+                </div>
+            </div>
+            <div class="w-full bg-gray-200 rounded-full h-2 mb-2">
+                <div id="xp-bar-sidebar" class="bg-blue-600 h-2 rounded-full progress-fill" style="width: 0%"></div>
+            </div>
+            <div class="flex justify-between text-xs font-semibold text-gray-500">
+                <span id="xp-text-sidebar">0 XP</span>
+                <span>Next Lv</span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content Area -->
+    <main class="flex-1 p-4 md:p-8 pb-24 md:pb-8 overflow-y-auto max-w-7xl mx-auto w-full">
+        
+        <!-- Header Mobile (User Stats) -->
+        <div class="md:hidden flex items-center justify-between mb-6 glass-panel p-4 rounded-2xl sticky top-4 z-40">
+            <div>
+                <h1 class="font-bold text-lg">Fintech 101</h1>
+                <p class="text-xs text-gray-500">Level <span id="user-level-mobile">1</span> &bull; <span id="xp-text-mobile">0</span> XP</p>
+            </div>
+            <div class="flex items-center space-x-2">
+                <div class="bg-orange-100 text-orange-600 px-3 py-1 rounded-full text-xs font-bold flex items-center">
+                    <i class="fas fa-fire mr-1"></i> <span id="streak-mobile">1</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- SECTIONS -->
+
+        <!-- 1. DASHBOARD -->
+        <section id="dashboard" class="visible-section">
+            <header class="mb-8">
+                <h2 class="text-3xl font-bold text-gray-900 mb-2">Selamat Datang, Financers!</h2>
+                <p class="text-gray-500">Mulai perjalanan literasi keuanganmu hari ini.</p>
+            </header>
+
+            <!-- Hero Card -->
+            <div class="bg-gradient-to-r from-blue-600 to-indigo-700 rounded-3xl p-6 md:p-10 text-white shadow-xl mb-8 relative overflow-hidden">
+                <div class="absolute top-0 right-0 opacity-10 transform translate-x-10 -translate-y-10">
+                    <i class="fas fa-wallet text-9xl"></i>
+                </div>
+                <div class="relative z-10 max-w-lg">
+                    <h3 class="text-2xl md:text-3xl font-bold mb-4">Kuasai Fintech, Atur Masa Depan</h3>
+                    <p class="text-blue-100 mb-6">Pelajari konsep finansial teknologi, kembangkan skill manajemen uang, dan raih kebebasan finansial.</p>
+                    <button onclick="navigate('modules')" class="bg-white text-blue-600 px-6 py-3 rounded-full font-bold hover:bg-gray-100 transition shadow-lg">
+                        Mulai Belajar
+                    </button>
+                </div>
+            </div>
+
+            <!-- Dashboard Stats Grid -->
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+                <div class="bg-white p-4 rounded-2xl shadow-sm border border-gray-100">
+                    <div class="text-gray-400 text-sm mb-1">Total XP</div>
+                    <div class="text-2xl font-bold text-gray-900" id="dash-xp">0</div>
+                </div>
+                <div class="bg-white p-4 rounded-2xl shadow-sm border border-gray-100">
+                    <div class="text-gray-400 text-sm mb-1">Level</div>
+                    <div class="text-2xl font-bold text-blue-600" id="dash-level">1</div>
+                </div>
+                <div class="bg-white p-4 rounded-2xl shadow-sm border border-gray-100">
+                    <div class="text-gray-400 text-sm mb-1">Modul Selesai</div>
+                    <div class="text-2xl font-bold text-green-600" id="dash-modules">0/4</div>
+                </div>
+                <div class="bg-white p-4 rounded-2xl shadow-sm border border-gray-100">
+                    <div class="text-gray-400 text-sm mb-1">Streak</div>
+                    <div class="text-2xl font-bold text-orange-500 flex items-center">
+                        <span id="dash-streak">1</span> <i class="fas fa-fire ml-2 text-sm"></i>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Video Section -->
+            <div class="bg-black rounded-3xl overflow-hidden shadow-2xl mt-8">
+                <div class="p-6 md:p-8 bg-gray-900 text-white flex flex-col md:flex-row items-center justify-between">
+                    <div>
+                        <h3 class="text-xl font-bold mb-2"><i class="fab fa-youtube text-red-500 mr-2"></i> Pengantar Fintech</h3>
+                        <p class="text-gray-400 text-sm">Tonton video pengenalan singkat tentang aplikasi ini.</p>
+                    </div>
+                    <a href="https://youtu.be/3lempySi9TU" target="_blank" class="mt-4 md:mt-0 bg-red-600 hover:bg-red-700 text-white px-6 py-3 rounded-full font-bold transition flex items-center">
+                        <i class="fas fa-play mr-2"></i> Tonton Video
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- 2. MODULES & LEARNING -->
+        <section id="modules" class="hidden-section">
+            <header class="mb-6 flex justify-between items-end">
+                <div>
+                    <h2 class="text-3xl font-bold text-gray-900">Modul Pembelajaran</h2>
+                    <p class="text-gray-500">Selesaikan materi dan kuis untuk naik level.</p>
+                </div>
+            </header>
+
+            <!-- Module List -->
+            <div id="module-list" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Modules will be injected here via JS -->
+            </div>
+
+            <!-- Module Detail View (Hidden by default) -->
+            <div id="module-detail" class="hidden bg-white rounded-3xl shadow-xl border border-gray-100 overflow-hidden">
+                <div class="p-6 border-b border-gray-100 flex justify-between items-center sticky top-0 bg-white/90 backdrop-blur z-20">
+                    <button onclick="closeModule()" class="text-gray-500 hover:text-black">
+                        <i class="fas fa-arrow-left mr-2"></i> Kembali
+                    </button>
+                    <h3 id="detail-title" class="font-bold text-lg">Judul Modul</h3>
+                    <div class="w-8"></div> <!-- Spacer -->
+                </div>
+                
+                <div class="p-6 md:p-10 max-w-3xl mx-auto">
+                    <!-- Video Button -->
+                    <div class="mb-8 p-6 bg-gray-50 rounded-2xl flex flex-col items-center text-center border border-gray-200">
+                        <i class="fab fa-youtube text-4xl text-red-600 mb-3"></i>
+                        <h4 class="font-bold mb-2">Video Pembelajaran</h4>
+                        <p class="text-sm text-gray-500 mb-4">Tonton video materi ini sebelum membaca artikel.</p>
+                        <a id="detail-video-btn" href="#" target="_blank" class="btn-apple px-6 py-2 rounded-full text-sm font-bold shadow-md">
+                            Tonton Sekarang
+                        </a>
+                    </div>
+
+                    <!-- Infographic Image Area -->
+                    <div class="mb-8">
+                        <!-- Kode pemanggil gambar otomatis. Ganti 'src' via data JavaScript -->
+                        <img id="detail-image" src="" onerror="this.src='https://placehold.co/600x400?text=Infografis+Belum+Ada'" alt="Infografis Modul" class="w-full aspect-[4/3] object-cover rounded-2xl shadow-md border border-gray-200 bg-gray-100">
+                        <p class="text-center text-xs text-gray-400 mt-2">Infografis Materi</p>
+                    </div>
+
+                    <!-- Content Text -->
+                    <div id="detail-content" class="prose prose-lg text-gray-700 leading-relaxed space-y-4">
+                        <!-- Text injected via JS -->
+                    </div>
+
+                    <!-- Quiz CTA -->
+                    <div class="mt-12 pt-8 border-t border-gray-200 text-center">
+                        <h4 class="font-bold text-xl mb-4">Sudah paham materinya?</h4>
+                        <button onclick="startQuiz()" class="bg-green-500 hover:bg-green-600 text-white px-8 py-4 rounded-2xl font-bold shadow-lg text-lg transform transition hover:-translate-y-1">
+                            Kerjakan Kuis & Dapat XP <i class="fas fa-bolt ml-2"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quiz Interface (Hidden by default) -->
+            <div id="quiz-interface" class="hidden fixed inset-0 bg-gray-900 bg-opacity-95 z-50 flex items-center justify-center p-4">
+                <div class="bg-white w-full max-w-2xl rounded-3xl overflow-hidden shadow-2xl relative">
+                    <!-- Quiz Header -->
+                    <div class="bg-gray-50 p-6 border-b border-gray-100 flex justify-between items-center">
+                        <div>
+                            <span class="text-xs font-bold text-gray-400 uppercase tracking-wide">Pertanyaan <span id="quiz-progress">1</span>/10</span>
+                            <div class="w-32 bg-gray-200 rounded-full h-1 mt-1">
+                                <div id="quiz-bar" class="bg-blue-600 h-1 rounded-full transition-all duration-300" style="width: 10%"></div>
+                            </div>
+                        </div>
+                        <div class="text-orange-500 font-bold">
+                            <i class="fas fa-bolt"></i> +<span id="quiz-potential-xp">100</span> XP
+                        </div>
+                    </div>
+
+                    <!-- Quiz Content -->
+                    <div class="p-8">
+                        <h3 id="quiz-question" class="text-xl font-bold text-gray-800 mb-6">Pertanyaan disini?</h3>
+                        <div id="quiz-options" class="space-y-3">
+                            <!-- Options injected via JS -->
+                        </div>
+                    </div>
+
+                    <!-- Quiz Footer -->
+                    <div class="p-6 bg-gray-50 border-t border-gray-100 flex justify-between items-center">
+                        <button onclick="quitQuiz()" class="text-gray-400 hover:text-red-500 font-medium text-sm">Keluar</button>
+                        <button id="next-q-btn" onclick="nextQuestion()" class="btn-apple px-6 py-2 rounded-lg font-bold shadow-md opacity-50 cursor-not-allowed" disabled>
+                            Lanjut
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quiz Result Modal -->
+            <div id="quiz-result" class="hidden fixed inset-0 z-[60] flex items-center justify-center bg-black bg-opacity-80 backdrop-blur-sm">
+                <div class="bg-white rounded-3xl p-8 max-w-md w-full text-center relative overflow-hidden">
+                    <div class="mb-6">
+                        <i id="result-icon" class="fas fa-trophy text-6xl text-yellow-400 animate-bounce"></i>
+                    </div>
+                    <h2 id="result-title" class="text-3xl font-bold mb-2">Luar Biasa!</h2>
+                    <p class="text-gray-500 mb-6">Kamu telah menyelesaikan modul ini.</p>
+                    
+                    <div class="bg-gray-50 rounded-xl p-4 mb-6 grid grid-cols-2 gap-4">
+                        <div>
+                            <div class="text-xs text-gray-400">Skor</div>
+                            <div id="result-score" class="text-xl font-bold">80%</div>
+                        </div>
+                        <div>
+                            <div class="text-xs text-gray-400">XP Didapat</div>
+                            <div id="result-xp" class="text-xl font-bold text-blue-600">+150 XP</div>
+                        </div>
+                    </div>
+
+                    <button onclick="closeQuizResult()" class="w-full btn-apple py-3 rounded-xl font-bold">
+                        Lanjut Belajar
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- 3. TOOLS (PERENCANAAN KEUANGAN) -->
+        <section id="tools" class="hidden-section">
+            <header class="mb-8">
+                <h2 class="text-3xl font-bold text-gray-900">Alat Finansial</h2>
+                <p class="text-gray-500">Simulasi dan rencanakan masa depan keuanganmu.</p>
+            </header>
+
+            <!-- Tools Video Header -->
+            <div class="mb-8 p-1 bg-gradient-to-r from-green-400 to-blue-500 rounded-2xl">
+                <div class="bg-white rounded-xl p-6 flex flex-col md:flex-row items-center justify-between">
+                    <div class="mb-4 md:mb-0">
+                        <h3 class="font-bold text-lg"><i class="fas fa-lightbulb text-yellow-500 mr-2"></i> Tips Perencanaan Keuangan</h3>
+                        <p class="text-sm text-gray-500">Pelajari cara menggunakan alat-alat ini secara efektif.</p>
+                    </div>
+                    <a href="https://youtu.be/RwVZI6M5q9g" target="_blank" class="bg-gray-900 text-white px-5 py-2 rounded-lg text-sm font-bold hover:bg-black transition">
+                        <i class="fas fa-play mr-2"></i> Tonton Panduan
+                    </a>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- 1. Financial Health Check -->
+                <div class="bg-white p-6 rounded-3xl shadow-sm border border-gray-100">
+                    <h3 class="font-bold text-xl mb-4 text-blue-900">Skor Kesehatan Finansial</h3>
+                    <div class="space-y-4 mb-6">
+                        <label class="flex items-center space-x-3 p-3 bg-gray-50 rounded-lg cursor-pointer hover:bg-blue-50">
+                            <input type="checkbox" class="w-5 h-5 text-blue-600 rounded focus:ring-blue-500 health-check">
+                            <span class="text-sm">Saya menabung minimal 20% dari pendapatan</span>
+                        </label>
+                        <label class="flex items-center space-x-3 p-3 bg-gray-50 rounded-lg cursor-pointer hover:bg-blue-50">
+                            <input type="checkbox" class="w-5 h-5 text-blue-600 rounded focus:ring-blue-500 health-check">
+                            <span class="text-sm">Saya memiliki dana darurat (3x pengeluaran)</span>
+                        </label>
+                        <label class="flex items-center space-x-3 p-3 bg-gray-50 rounded-lg cursor-pointer hover:bg-blue-50">
+                            <input type="checkbox" class="w-5 h-5 text-blue-600 rounded focus:ring-blue-500 health-check">
+                            <span class="text-sm">Saya mencatat pengeluaran setiap hari</span>
+                        </label>
+                        <label class="flex items-center space-x-3 p-3 bg-gray-50 rounded-lg cursor-pointer hover:bg-blue-50">
+                            <input type="checkbox" class="w-5 h-5 text-blue-600 rounded focus:ring-blue-500 health-check">
+                            <span class="text-sm">Cicilan utang saya < 30% pendapatan</span>
+                        </label>
+                        <label class="flex items-center space-x-3 p-3 bg-gray-50 rounded-lg cursor-pointer hover:bg-blue-50">
+                            <input type="checkbox" class="w-5 h-5 text-blue-600 rounded focus:ring-blue-500 health-check">
+                            <span class="text-sm">Saya memiliki asuransi kesehatan</span>
+                        </label>
+                    </div>
+                    <button onclick="calculateHealth()" class="w-full bg-blue-600 text-white py-3 rounded-xl font-bold hover:bg-blue-700">Cek Skor Saya</button>
+                    <div id="health-result" class="mt-4 hidden p-4 bg-blue-50 rounded-xl text-center">
+                        <div class="text-sm text-gray-500">Skor Anda</div>
+                        <div id="health-score-val" class="text-4xl font-bold text-blue-600 my-2">0/100</div>
+                        <p id="health-msg" class="text-xs font-medium"></p>
+                    </div>
+                </div>
+
+                <!-- 2. Goal Planner -->
+                <div class="bg-white p-6 rounded-3xl shadow-sm border border-gray-100">
+                    <h3 class="font-bold text-xl mb-4 text-purple-900">Simulasi Menabung (Goal)</h3>
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Target Dana (Rp)</label>
+                            <input type="number" id="goal-amount" placeholder="Contoh: 10000000" class="w-full p-3 rounded-lg border border-gray-300 focus:outline-none focus:border-blue-500">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Bisa Nabung per Bulan (Rp)</label>
+                            <input type="number" id="goal-saving" placeholder="Contoh: 500000" class="w-full p-3 rounded-lg border border-gray-300 focus:outline-none focus:border-blue-500">
+                        </div>
+                        <button onclick="calculateGoal()" class="w-full bg-purple-600 text-white py-3 rounded-xl font-bold hover:bg-purple-700">Hitung Estimasi</button>
+                        
+                        <div id="goal-result" class="hidden mt-4 text-center">
+                            <div class="p-4 bg-purple-50 rounded-xl">
+                                <p class="text-sm text-gray-600">Anda akan mencapai target dalam:</p>
+                                <p id="goal-months" class="text-3xl font-bold text-purple-600 my-2">0 Bulan</p>
+                                <p id="goal-years" class="text-xs text-gray-500"></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 3. Budgeting 50/30/20 -->
+                <div class="bg-white p-6 rounded-3xl shadow-sm border border-gray-100 md:col-span-2">
+                    <h3 class="font-bold text-xl mb-4 text-green-900">Kalkulator Budget 50/30/20</h3>
+                    <div class="flex flex-col md:flex-row gap-8">
+                        <div class="flex-1 space-y-4">
+                            <p class="text-sm text-gray-600">Masukkan pendapatan bulananmu untuk melihat pembagian ideal.</p>
+                            <div>
+                                <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Pendapatan Bulanan (Rp)</label>
+                                <input type="number" id="budget-income" placeholder="Contoh: 5000000" class="w-full p-3 rounded-lg border border-gray-300 focus:outline-none focus:border-green-500">
+                            </div>
+                            <button onclick="calculateBudget()" class="w-full bg-green-600 text-white py-3 rounded-xl font-bold hover:bg-green-700">Hitung Budget</button>
+                        </div>
+                        <div id="budget-result" class="flex-1 hidden">
+                            <div class="space-y-3">
+                                <div class="p-3 bg-blue-50 rounded-lg border-l-4 border-blue-500">
+                                    <div class="flex justify-between">
+                                        <span class="font-bold text-blue-700">Kebutuhan (50%)</span>
+                                        <span id="res-50" class="font-bold">Rp 0</span>
+                                    </div>
+                                    <div class="text-xs text-blue-600 mt-1">Makan, Kost, Listrik, Transport</div>
+                                </div>
+                                <div class="p-3 bg-yellow-50 rounded-lg border-l-4 border-yellow-500">
+                                    <div class="flex justify-between">
+                                        <span class="font-bold text-yellow-700">Keinginan (30%)</span>
+                                        <span id="res-30" class="font-bold">Rp 0</span>
+                                    </div>
+                                    <div class="text-xs text-yellow-600 mt-1">Nonton, Kopi, Belanja, Hobi</div>
+                                </div>
+                                <div class="p-3 bg-green-50 rounded-lg border-l-4 border-green-500">
+                                    <div class="flex justify-between">
+                                        <span class="font-bold text-green-700">Tabungan (20%)</span>
+                                        <span id="res-20" class="font-bold">Rp 0</span>
+                                    </div>
+                                    <div class="text-xs text-green-600 mt-1">Dana Darurat, Investasi, Utang</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- JavaScript Logic -->
+    <script>
+        // --- DATA ---
+        const moduleData = [
+            {
+                id: 1,
+                title: "Apa itu Fintech",
+                desc: "Pengenalan dasar teknologi finansial.",
+                icon: "fa-mobile-alt",
+                color: "bg-blue-100 text-blue-600",
+                videoLink: "https://youtu.be/Kj7MRL2kjdw",
+                image: "images/infografis_apa_itu_fintech.png", // <--- Tambahkan path gambar Anda di sini (Baris ini)
+                content: `
+                    <h3 class="text-2xl font-bold text-gray-900">Definisi Fintech</h3>
+                    <p>Fintech (Financial Technology) adalah penggunaan teknologi digital modern (AI, blockchain, big data, mobile app) untuk menyediakan layanan keuangan yang lebih cepat, murah, aman, dan inklusif dibanding sistem bank tradisional.</p>
+                    
+                    <div class="bg-gray-50 p-4 rounded-xl border-l-4 border-blue-500 my-4">
+                        <h4 class="font-bold">Contoh Nyata Fintech:</h4>
+                        <ul class="list-disc ml-5 mt-2 space-y-1">
+                            <li><strong>Pembayaran digital:</strong> GoPay, OVO, DANA</li>
+                            <li><strong>Pinjaman online (P2P):</strong> Amartha, Investree</li>
+                            <li><strong>Investasi digital:</strong> Bibit, Ajaib</li>
+                            <li><strong>Asuransi online:</strong> Lifepal, Qoala</li>
+                        </ul>
+                    </div>
+
+                    <h4 class="font-bold text-lg mt-6">Manfaat Fintech:</h4>
+                    <ul class="list-none space-y-2 mt-2">
+                        <li>✅ <strong>24 Jam:</strong> Transaksi kapan saja.</li>
+                        <li>✅ <strong>Lebih Murah:</strong> Biaya admin rendah atau gratis.</li>
+                        <li>✅ <strong>Cepat:</strong> Proses approve hitungan menit.</li>
+                        <li>✅ <strong>Inklusif:</strong> Siapa saja bisa pakai.</li>
+                    </ul>
+
+                    <h4 class="font-bold text-lg mt-6">Tips Aman:</h4>
+                    <p>Cek legalitas di OJK, atur uang (50/30/20), mulai dari nominal kecil, dan baca biaya admin dengan teliti. Ingat, Fintech adalah alat bantu, bukan pengganti disiplin keuangan.</p>
+                `
+            },
+            {
+                id: 2,
+                title: "Jenis-jenis Fintech",
+                desc: "Klasifikasi dan contoh aplikasi.",
+                icon: "fa-layer-group",
+                color: "bg-purple-100 text-purple-600",
+                videoLink: "https://youtu.be/IFUtUYEKbh4",
+                image: "images/infografis_jenis_fintech.png", // <--- Tambahkan path gambar Anda di sini (Baris ini)
+                content: `
+                    <p>Klasifikasi jenis fintech mencerminkan diversifikasi layanan keuangan digital yang disesuaikan dengan kebutuhan pengguna.</p>
+                    
+                    <h3 class="font-bold mt-4">5 Jenis Fintech Utama:</h3>
+                    <div class="space-y-4 mt-2">
+                        <div class="bg-white border p-4 rounded-lg shadow-sm">
+                            <span class="font-bold text-purple-600">1. P2P Lending</span>
+                            <p class="text-sm">Menghubungkan pemberi & peminjam. Cocok untuk modal usaha. <br><em>Contoh: Amartha, Investree.</em></p>
+                        </div>
+                        <div class="bg-white border p-4 rounded-lg shadow-sm">
+                            <span class="font-bold text-purple-600">2. E-Wallet/Payment</span>
+                            <p class="text-sm">Transaksi harian via QRIS/Top-up. <br><em>Contoh: GoPay, OVO, DANA.</em></p>
+                        </div>
+                        <div class="bg-white border p-4 rounded-lg shadow-sm">
+                            <span class="font-bold text-purple-600">3. Robo Advisor</span>
+                            <p class="text-sm">Investasi otomatis berbasis AI. <br><em>Contoh: Bibit, Ajaib.</em></p>
+                        </div>
+                        <div class="bg-white border p-4 rounded-lg shadow-sm">
+                            <span class="font-bold text-purple-600">4. Insurtech</span>
+                            <p class="text-sm">Asuransi digital instan. <br><em>Contoh: Lifepal, Qoala.</em></p>
+                        </div>
+                        <div class="bg-white border p-4 rounded-lg shadow-sm">
+                            <span class="font-bold text-purple-600">5. Bank Digital</span>
+                            <p class="text-sm">Full online tanpa cabang fisik. <br><em>Contoh: Jenius, Blu, SeaBank.</em></p>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-6 bg-yellow-50 p-4 rounded-xl">
+                        <h4 class="font-bold">Cara Pilih Fintech Tepat:</h4>
+                        <ul class="text-sm mt-2 space-y-1">
+                            <li>Transaksi harian → E-Wallet</li>
+                            <li>Modal usaha → P2P Lending</li>
+                            <li>Nabung investasi → Robo Advisor/Bank Digital</li>
+                            <li>Proteksi diri → Insurtech</li>
+                        </ul>
+                    </div>
+                `
+            },
+            {
+                id: 3,
+                title: "Keamanan & Privasi",
+                desc: "Melindungi data dan uang Anda.",
+                icon: "fa-shield-alt",
+                color: "bg-red-100 text-red-600",
+                videoLink: "https://youtu.be/JYIjxOreYQo",
+                image: "images/infografis_keamanan.png", // <--- Tambahkan path gambar Anda di sini (Baris ini)
+                content: `
+                    <p>Keamanan digital adalah elemen krusial untuk mencegah kerugian finansial akibat serangan siber.</p>
+                    
+                    <h3 class="font-bold mt-4">Ancaman Umum & Pencegahan:</h3>
+                    <div class="grid md:grid-cols-2 gap-4 mt-2">
+                        <div class="border p-3 rounded-lg">
+                            <strong class="text-red-500">Phishing</strong><br>
+                            Link palsu minta OTP. <br><em>Cegah: Cek URL resmi.</em>
+                        </div>
+                        <div class="border p-3 rounded-lg">
+                            <strong class="text-red-500">WiFi Publik</strong><br>
+                            Hacker curi data di kafe.<br><em>Cegah: Pakai Data Seluler/VPN.</em>
+                        </div>
+                        <div class="border p-3 rounded-lg">
+                            <strong class="text-red-500">PIN Lemah</strong><br>
+                            Mudah ditebak (123456).<br><em>Cegah: Ganti rutin, kombinasi unik.</em>
+                        </div>
+                        <div class="border p-3 rounded-lg">
+                            <strong class="text-red-500">OTP Dibagikan</strong><br>
+                            Kunci masuk akun.<br><em>Cegah: JANGAN bagikan OTP ke siapapun!</em>
+                        </div>
+                    </div>
+
+                    <h4 class="font-bold mt-6">3 Pilar Keamanan Wajib:</h4>
+                    <ol class="list-decimal ml-5 mt-2">
+                        <li><strong>2FA:</strong> Gunakan SMS + Authenticator app.</li>
+                        <li><strong>Biometrik:</strong> Aktifkan Sidik Jari/Face ID.</li>
+                        <li><strong>Update App:</strong> Selalu update untuk patch keamanan.</li>
+                    </ol>
+                    
+                    <p class="mt-4 text-sm text-gray-500">Regulasi Perlindungan Data (UU PDP 2022) menjamin hak konsumen untuk melihat, menghapus, dan mengoreksi data pribadi. Lapor ke pdp.kominfo.go.id jika disalahgunakan.</p>
+                `
+            },
+            {
+                id: 4,
+                title: "Regulasi & Konsumen",
+                desc: "Hukum dan hak pengguna.",
+                icon: "fa-balance-scale",
+                color: "bg-green-100 text-green-600",
+                videoLink: "https://youtu.be/4phnSGUtyf0",
+                image: "images/infografis_regulasi.png", // <--- Tambahkan path gambar Anda di sini (Baris ini)
+                content: `
+                    <p>Pemerintah Indonesia menerapkan pengawasan ketat melalui OJK, BI, dan Kominfo.</p>
+
+                    <h3 class="font-bold mt-4">Lembaga Pengawas:</h3>
+                    <ul class="list-disc ml-5 mt-2 space-y-1">
+                        <li><strong>OJK:</strong> Lisensi operasional & SLIK.</li>
+                        <li><strong>BI:</strong> Sistem pembayaran & QRIS.</li>
+                        <li><strong>Kominfo:</strong> Blokir fintech ilegal.</li>
+                    </ul>
+
+                    <h3 class="font-bold mt-4">Regulasi Penting:</h3>
+                    <ul class="list-disc ml-5 mt-2 space-y-1">
+                        <li><strong>POJK 77/2016:</strong> Aturan P2P Lending (Max bunga 0.4%/hari).</li>
+                        <li><strong>POJK 12/2021:</strong> Limit E-Wallet (Rp10 Juta).</li>
+                        <li><strong>UU PDP 2022:</strong> Privasi data.</li>
+                    </ul>
+
+                    <div class="bg-red-50 p-4 rounded-xl mt-6 border-l-4 border-red-500">
+                        <h4 class="font-bold text-red-700">Tanda Fintech Ilegal:</h4>
+                        <ul class="text-sm mt-2 text-red-600">
+                            <li>⚠️ Menjanjikan untung tidak wajar (>1%/hari).</li>
+                            <li>⚠️ Tidak ada logo/lisensi OJK.</li>
+                            <li>⚠️ Meminta akses kontak HP berlebihan.</li>
+                            <li>⚠️ Penagihan kasar/intimidasi.</li>
+                        </ul>
+                    </div>
+
+                    <p class="mt-4 font-bold">Cara Cek Legalitas:</p>
+                    <p>Buka <strong>ojk.go.id</strong> atau hubungi Kontak OJK 157.</p>
+                `
+            }
+        ];
+
+        // --- QUIZ DATA ---
+        const quizBank = {
+            1: [
+                { q: "Apa kepanjangan dari Fintech?", o: ["Financial Technic", "Financial Technology", "Finance Technic", "Final Technology"], a: 1 },
+                { q: "Manakah yang BUKAN merupakan layanan Fintech?", o: ["Pembayaran QRIS", "Teller Bank Fisik", "Pinjaman Online", "Robo Advisor"], a: 1 },
+                { q: "Apa keunggulan utama Fintech dibanding bank tradisional?", o: ["Bunga lebih tinggi", "Harus datang ke kantor", "Inklusif dan efisien", "Hanya untuk orang kaya"], a: 2 },
+                { q: "Aplikasi seperti GoPay dan OVO termasuk jenis fintech...", o: ["P2P Lending", "Insurtech", "E-Wallet", "Crowdfunding"], a: 2 },
+                { q: "Berapa biaya transfer yang umum ditawarkan bank digital ke bank lain?", o: ["Rp 6.500", "Gratis/Murah", "Rp 10.000", "Rp 50.000"], a: 1 },
+                { q: "Website untuk mengecek legalitas Fintech adalah...", o: ["google.com", "ojk.go.id", "facebook.com", "fintech.com"], a: 1 },
+                { q: "Studi Kasus: Budi ingin meminjam uang Rp 2 Juta cepat cair tanpa jaminan. Ia sebaiknya menggunakan...", o: ["Kredit Rumah", "P2P Lending Legal", "Renteneir", "Tabungan Berjangka"], a: 1 },
+                { q: "Teknologi yang mendasari mata uang kripto dalam fintech adalah...", o: ["Blockchain", "AI", "Cloud", "IOT"], a: 0 },
+                { q: "Fintech membantu inklusi keuangan, artinya...", o: ["Semua orang jadi kaya", "Masyarakat tanpa bank bisa akses keuangan", "Hanya orang kota yang bisa pakai", "Menggantikan uang kertas"], a: 1 },
+                { q: "Apa peran AI dalam fintech?", o: ["Mencetak uang", "Analisis risiko kredit otomatis", "Menjaga kantor", "Membuat ATM"], a: 1 }
+            ],
+            2: [
+                { q: "Amartha dan Investree adalah contoh fintech jenis...", o: ["E-Wallet", "P2P Lending", "Digital Bank", "Insurtech"], a: 1 },
+                { q: "Untuk investasi saham otomatis bagi pemula, disarankan menggunakan...", o: ["Robo Advisor", "P2P Lending", "E-Wallet", "Payment Gateway"], a: 0 },
+                { q: "Platform asuransi digital disebut juga...", o: ["Fintech", "Insurtech", "Regtech", "Banktech"], a: 1 },
+                { q: "BTPN meluncurkan bank digital bernama...", o: ["Blu", "Jenius", "Jago", "SeaBank"], a: 1 },
+                { q: "Fungsi utama E-Wallet adalah...", o: ["Investasi jangka panjang", "Transaksi harian", "Pinjaman besar", "Asuransi Jiwa"], a: 1 },
+                { q: "Studi Kasus: Ani punya usaha UMKM dan butuh modal. Ia sebaiknya mencari...", o: ["Robo Advisor", "P2P Lending Produktif", "Insurtech", "E-Wallet"], a: 1 },
+                { q: "Return rata-rata Robo Advisor per tahun berkisar...", o: ["1-2%", "8-12%", "50%", "100%"], a: 1 },
+                { q: "QRIS adalah standar pembayaran yang dikeluarkan oleh...", o: ["OJK", "Bank Indonesia", "Kominfo", "Google"], a: 1 },
+                { q: "Bank Digital berbeda dengan Mobile Banking karena...", o: ["Tidak punya kantor cabang fisik", "Bunganya 0%", "Hanya di PC", "Tidak ada bedanya"], a: 0 },
+                { q: "Teknis: Apa itu 'Fractional Share' di aplikasi investasi?", o: ["Membeli saham penuh", "Membeli sebagian kecil saham dengan nominal murah", "Saham palsu", "Saham gratis"], a: 1 }
+            ],
+            3: [
+                { q: "Apa itu Phishing?", o: ["Memancing ikan", "Penipuan link palsu", "Virus komputer", "Aplikasi resmi"], a: 1 },
+                { q: "OTP singkatan dari...", o: ["One Time Password", "Only The People", "On Time Payment", "One Time Payment"], a: 0 },
+                { q: "Berapa lama OTP biasanya berlaku?", o: ["1 Jam", "1 Hari", "Sekitar 5 menit", "Selamanya"], a: 2 },
+                { q: "Mengapa WiFi publik berbahaya untuk transaksi?", o: ["Lambat", "Rawan penyadapan data", "Mahal", "Tidak bisa connect"], a: 1 },
+                { q: "Kombinasi PIN yang paling TIDAK aman adalah...", o: ["839201", "Tanggal Lahir", "123456", "Acak"], a: 2 },
+                { q: "Apa fungsi 2FA (Two Factor Authentication)?", o: ["Memperlambat login", "Lapisan keamanan ganda", "Menghapus akun", "Gratis biaya"], a: 1 },
+                { q: "Studi Kasus: Anda menerima SMS 'Hadiah Gopay' dengan link gopayy.com. Tindakan anda?", o: ["Klik link", "Abaikan & lapor", "Isi data", "Sebar ke teman"], a: 1 },
+                { q: "Teknis: Enkripsi End-to-End berguna untuk...", o: ["Mempercepat internet", "Mengamankan pesan/data agar tidak dibaca peretas", "Menghapus data", "Backup data"], a: 1 },
+                { q: "Undang-undang yang melindungi data pribadi adalah...", o: ["UU ITE", "UU PDP 2022", "KUHP", "UUD 45"], a: 1 },
+                { q: "Jangan pernah memberikan foto KTP dan Selfie kepada...", o: ["Aplikasi OJK", "Bank Resmi", "Orang tak dikenal di WA/Telegram", "Petugas sensus"], a: 2 }
+            ],
+            4: [
+                { q: "Lembaga yang memberikan lisensi Fintech Lending adalah...", o: ["Kominfo", "OJK", "Polisi", "Kemenkeu"], a: 1 },
+                { q: "Batas maksimal bunga harian P2P Lending legal adalah...", o: ["1%", "0.4%", "2%", "5%"], a: 1 },
+                { q: "Nomor layanan konsumen OJK adalah...", o: ["110", "157", "123", "911"], a: 1 },
+                { q: "Ciri pinjol ilegal yang paling umum adalah...", o: ["Bunga transparan", "Penagihan kasar & sebar data", "Ada logo OJK", "Limit wajar"], a: 1 },
+                { q: "Regulasi limit saldo E-Wallet (Registered) adalah...", o: ["Rp 2 Juta", "Rp 10 Juta", "Rp 20 Juta", "Tak terbatas"], a: 1 },
+                { q: "Apa itu Regulatory Sandbox?", o: ["Kotak pasir mainan", "Ruang uji coba inovasi fintech", "Penjara fintech ilegal", "Server data"], a: 1 },
+                { q: "LPS menjamin simpanan di Bank Digital hingga...", o: ["Rp 100 Juta", "Rp 2 Miliar", "Rp 500 Juta", "Tidak dijamin"], a: 1 },
+                { q: "Studi Kasus: App menjanjikan 'Profit pasti 50% seminggu'. Ini adalah tanda...", o: ["Investasi bagus", "Skema Ponzi/Ilegal", "Fintech Legal", "Bank Digital"], a: 1 },
+                { q: "Jika menemukan fintech ilegal, lapor ke...", o: ["Satgas Pasti/Kominfo", "RT/RW", "Facebook", "Teman"], a: 0 },
+                { q: "Hak konsumen fintech meliputi, KECUALI...", o: ["Transparansi", "Kerahasiaan Data", "Penanganan Pengaduan", "Bebas bayar utang"], a: 3 }
+            ]
+        };
+
+        // --- STATE ---
+        let user = {
+            xp: 0,
+            level: 1,
+            streak: 1,
+            completedModules: [] // array of IDs
+        };
+
+        let currentQuizModule = null;
+        let currentQuestionIndex = 0;
+        let currentScore = 0;
+        let correctAnswersStreak = 0;
+
+        // --- LEVELING LOGIC ---
+        function checkLevelUp() {
+            const nextLevelXP = user.level * 500;
+            if (user.xp >= nextLevelXP) {
+                user.level++;
+                user.xp -= nextLevelXP; // Or keep accumulating, simple system here resets or thresholds
+                // For this logic, let's keep accumulating total XP, but levels are thresholds
+                // Simple threshold: Level = floor(XP / 500) + 1
+                let calcLevel = Math.floor(user.xp / 500) + 1;
+                if (calcLevel > user.level) {
+                    user.level = calcLevel;
+                    triggerConfetti();
+                    alert(`LEVEL UP! Selamat, kamu naik ke Level ${user.level}!`);
+                }
+            }
+            updateUI();
+        }
+
+        function updateUI() {
+            // XP & Level Text
+            document.getElementById('user-level-display').innerText = user.level;
+            document.getElementById('user-level-mobile').innerText = user.level;
+            document.getElementById('xp-text-sidebar').innerText = `${user.xp} XP`;
+            document.getElementById('xp-text-mobile').innerText = user.xp;
+            
+            // Dashboard Stats
+            document.getElementById('dash-xp').innerText = user.xp;
+            document.getElementById('dash-level').innerText = user.level;
+            document.getElementById('dash-modules').innerText = `${user.completedModules.length}/4`;
+            document.getElementById('dash-streak').innerText = user.streak;
+            document.getElementById('streak-mobile').innerText = user.streak;
+
+            // Progress Bar
+            const progressPct = (user.xp % 500) / 500 * 100;
+            document.getElementById('xp-bar-sidebar').style.width = `${progressPct}%`;
+        }
+
+        // --- NAVIGATION ---
+        function navigate(sectionId) {
+            // Update Active State on Nav
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('text-blue-600', 'bg-blue-50', 'active-nav');
+                btn.classList.add('text-gray-500');
+            });
+            
+            // Highlight current button (Simple logic based on onclick binding)
+            const activeBtn = Array.from(document.querySelectorAll('.nav-btn')).find(b => b.getAttribute('onclick').includes(sectionId));
+            if(activeBtn) {
+                activeBtn.classList.add('text-blue-600', 'bg-blue-50');
+                activeBtn.classList.remove('text-gray-500');
+            }
+
+            // Show/Hide Sections
+            document.querySelectorAll('section').forEach(sec => {
+                sec.classList.add('hidden-section');
+                sec.classList.remove('visible-section');
+            });
+            
+            const target = document.getElementById(sectionId);
+            target.classList.remove('hidden-section');
+            target.classList.add('visible-section');
+            
+            // Special Render for Modules
+            if(sectionId === 'modules') {
+                renderModuleList();
+                document.getElementById('module-detail').classList.add('hidden');
+                document.getElementById('module-list').classList.remove('hidden');
+            }
+        }
+
+        // --- MODULE FUNCTIONS ---
+        function renderModuleList() {
+            const container = document.getElementById('module-list');
+            container.innerHTML = moduleData.map(mod => {
+                const isDone = user.completedModules.includes(mod.id);
+                return `
+                    <div onclick="openModule(${mod.id})" class="bg-white rounded-3xl p-6 shadow-sm border border-gray-100 card-hover cursor-pointer relative overflow-hidden">
+                        <div class="flex items-start justify-between mb-4">
+                            <div class="w-12 h-12 rounded-2xl ${mod.color} flex items-center justify-center text-xl">
+                                <i class="fas ${mod.icon}"></i>
+                            </div>
+                            ${isDone ? '<span class="bg-green-100 text-green-600 px-3 py-1 rounded-full text-xs font-bold">Selesai ✅</span>' : ''}
+                        </div>
+                        <h3 class="text-xl font-bold mb-1">${mod.title}</h3>
+                        <p class="text-gray-500 text-sm">${mod.desc}</p>
+                        <div class="mt-4 flex items-center text-xs font-bold text-gray-400">
+                            <span><i class="fas fa-video mr-1"></i> Video</span>
+                            <span class="mx-2">•</span>
+                            <span><i class="fas fa-file-alt mr-1"></i> Artikel</span>
+                            <span class="mx-2">•</span>
+                            <span><i class="fas fa-question-circle mr-1"></i> Kuis</span>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function openModule(id) {
+            const mod = moduleData.find(m => m.id === id);
+            document.getElementById('module-list').classList.add('hidden');
+            const detail = document.getElementById('module-detail');
+            detail.classList.remove('hidden');
+            detail.classList.add('visible-section'); // Add animation
+
+            // Populate Content
+            document.getElementById('detail-title').innerText = mod.title;
+            document.getElementById('detail-content').innerHTML = mod.content;
+            document.getElementById('detail-video-btn').href = mod.videoLink;
+            // Set Image
+            document.getElementById('detail-image').src = mod.image;
+            
+            // Set current module for quiz
+            currentQuizModule = id;
+            
+            window.scrollTo(0,0);
+        }
+
+        function closeModule() {
+            document.getElementById('module-detail').classList.add('hidden');
+            document.getElementById('module-list').classList.remove('hidden');
+        }
+
+        // --- QUIZ LOGIC ---
+        function startQuiz() {
+            if(!currentQuizModule) return;
+            currentQuestionIndex = 0;
+            currentScore = 0;
+            correctAnswersStreak = 0;
+            
+            document.getElementById('quiz-interface').classList.remove('hidden');
+            renderQuestion();
+        }
+
+        function renderQuestion() {
+            const qData = quizBank[currentQuizModule][currentQuestionIndex];
+            document.getElementById('quiz-question').innerText = qData.q;
+            document.getElementById('quiz-progress').innerText = currentQuestionIndex + 1;
+            
+            // Progress Bar
+            const pct = ((currentQuestionIndex) / 10) * 100;
+            document.getElementById('quiz-bar').style.width = `${pct}%`;
+
+            // Render Options
+            const optionsContainer = document.getElementById('quiz-options');
+            optionsContainer.innerHTML = qData.o.map((opt, idx) => `
+                <button onclick="selectAnswer(this, ${idx})" class="w-full text-left p-4 rounded-xl border border-gray-200 hover:bg-blue-50 hover:border-blue-300 transition option-btn">
+                    ${opt}
+                </button>
+            `).join('');
+
+            document.getElementById('next-q-btn').disabled = true;
+            document.getElementById('next-q-btn').classList.add('opacity-50', 'cursor-not-allowed');
+        }
+
+        function selectAnswer(btn, selectedIdx) {
+            // Disable all buttons
+            document.querySelectorAll('.option-btn').forEach(b => b.disabled = true);
+            
+            const qData = quizBank[currentQuizModule][currentQuestionIndex];
+            const isCorrect = selectedIdx === qData.a;
+
+            if (isCorrect) {
+                btn.classList.add('bg-green-100', 'border-green-500', 'text-green-700');
+                currentScore++;
+                correctAnswersStreak++;
+            } else {
+                btn.classList.add('bg-red-100', 'border-red-500', 'text-red-700');
+                correctAnswersStreak = 0;
+                // Highlight correct
+                const allBtns = document.querySelectorAll('.option-btn');
+                allBtns[qData.a].classList.add('bg-green-100', 'border-green-500', 'text-green-700');
+            }
+
+            // Enable Next Button
+            const nextBtn = document.getElementById('next-q-btn');
+            nextBtn.disabled = false;
+            nextBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+        }
+
+        function nextQuestion() {
+            currentQuestionIndex++;
+            if (currentQuestionIndex < 10) {
+                renderQuestion();
+            } else {
+                finishQuiz();
+            }
+        }
+
+        function finishQuiz() {
+            document.getElementById('quiz-interface').classList.add('hidden');
+            document.getElementById('quiz-result').classList.remove('hidden');
+
+            const scorePct = (currentScore / 10) * 100;
+            let xpGained = currentScore * 10; // Base XP
+            
+            // Bonus Logic
+            if (currentScore === 10) xpGained += 50; // Perfect Score Bonus
+            
+            // Update User State
+            if (scorePct >= 70) {
+                if (!user.completedModules.includes(currentQuizModule)) {
+                    user.completedModules.push(currentQuizModule);
+                    user.xp += xpGained;
+                    checkLevelUp();
+                } else {
+                    // Re-doing quiz gives less XP
+                    xpGained = Math.floor(xpGained / 2);
+                    user.xp += xpGained;
+                }
+                document.getElementById('result-title').innerText = "Luar Biasa!";
+                document.getElementById('result-icon').className = "fas fa-trophy text-6xl text-yellow-400 animate-bounce";
+            } else {
+                document.getElementById('result-title').innerText = "Belajar Lagi Yuk!";
+                document.getElementById('result-icon').className = "fas fa-book-reader text-6xl text-gray-400";
+                xpGained = 10; // Pity XP
+                user.xp += xpGained;
+            }
+
+            document.getElementById('result-score').innerText = `${scorePct}%`;
+            document.getElementById('result-xp').innerText = `+${xpGained} XP`;
+            
+            updateUI();
+        }
+
+        function quitQuiz() {
+            if(confirm("Yakin ingin keluar? Progress kuis akan hilang.")) {
+                document.getElementById('quiz-interface').classList.add('hidden');
+            }
+        }
+
+        function closeQuizResult() {
+            document.getElementById('quiz-result').classList.add('hidden');
+            closeModule(); // Go back to list
+        }
+
+        // --- TOOLS LOGIC ---
+        function calculateHealth() {
+            const checks = document.querySelectorAll('.health-check:checked');
+            const score = checks.length * 20;
+            const resVal = document.getElementById('health-score-val');
+            const resMsg = document.getElementById('health-msg');
+            
+            document.getElementById('health-result').classList.remove('hidden');
+            resVal.innerText = `${score}/100`;
+
+            if(score >= 80) {
+                resMsg.innerText = "Kondisi Keuangan Sangat Sehat! Pertahankan.";
+                resMsg.className = "text-green-600 font-bold";
+            } else if (score >= 40) {
+                resMsg.innerText = "Cukup Sehat, namun perlu perbaikan.";
+                resMsg.className = "text-yellow-600 font-bold";
+            } else {
+                resMsg.innerText = "Waspada! Segera atur ulang keuanganmu.";
+                resMsg.className = "text-red-600 font-bold";
+            }
+        }
+
+        function calculateGoal() {
+            const goal = parseFloat(document.getElementById('goal-amount').value);
+            const saving = parseFloat(document.getElementById('goal-saving').value);
+
+            if(goal && saving && saving > 0) {
+                const months = Math.ceil(goal / saving);
+                const years = (months / 12).toFixed(1);
+                
+                document.getElementById('goal-result').classList.remove('hidden');
+                document.getElementById('goal-months').innerText = `${months} Bulan`;
+                document.getElementById('goal-years').innerText = `(Sekitar ${years} tahun)`;
+            }
+        }
+
+        function calculateBudget() {
+            const income = parseFloat(document.getElementById('budget-income').value);
+            if (income) {
+                document.getElementById('budget-result').classList.remove('hidden');
+                document.getElementById('budget-result').classList.add('block'); // ensure visibility
+                document.getElementById('res-50').innerText = "Rp " + (income * 0.5).toLocaleString('id-ID');
+                document.getElementById('res-30').innerText = "Rp " + (income * 0.3).toLocaleString('id-ID');
+                document.getElementById('res-20').innerText = "Rp " + (income * 0.2).toLocaleString('id-ID');
+            }
+        }
+
+        // --- UTILS ---
+        function triggerConfetti() {
+            for(let i=0; i<50; i++) {
+                const conf = document.createElement('div');
+                conf.classList.add('confetti');
+                conf.style.left = Math.random() * 100 + 'vw';
+                conf.style.backgroundColor = ['#ff0', '#f00', '#0f0', '#00f'][Math.floor(Math.random()*4)];
+                conf.style.animation = `confetti-fall ${Math.random()*2+2}s linear`;
+                document.body.appendChild(conf);
+                setTimeout(() => conf.remove(), 4000);
+            }
+        }
+
+        // Initialize
+        updateUI();
+    </script>
+</body>
+</html>
